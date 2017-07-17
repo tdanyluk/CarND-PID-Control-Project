@@ -1,7 +1,8 @@
 #ifndef PID_H
 #define PID_H
 
-class PID {
+class PID
+{
 public:
   /*
   * Errors
@@ -12,10 +13,12 @@ public:
 
   /*
   * Coefficients
-  */ 
+  */
   double Kp;
   double Ki;
   double Kd;
+
+  bool had_first_data;
 
   /*
   * Constructor
