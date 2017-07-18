@@ -4,16 +4,17 @@
 #include <cassert>
 #include "PID.h"
 
-Twiddle::Twiddle(double p0, double p1, double p2, double tolerance, int samples)
-    : tolerance_(tolerance),
+Twiddle::Twiddle(PID *pid, double tolerance, int samples)
+    : pid_(pid),
+      tolerance_(tolerance),
       samples_(samples),
-      dp_{p0 / 10, p1 / 10, p2 / 10},
+      p_{pid->Kp, pid->Ki, pid->Kd},
+      dp_{pid->Kp / 10, pid->Ki / 10, pid->Kd / 10},
       error_(0),
       best_error_(0),
       i_(0),
       next_label_(0),
-      step_(-1),
-      p_{p0, p1, p2}
+      step_(-1)
 {
 }
 
@@ -55,6 +56,7 @@ l1:
         for (i_ = 0; i_ < 3; i_++)
         {
             p_[i_] += dp_[i_];
+            SetPidParams();
             error_ = cte * cte;
             next_label_ = 2;
             return;
@@ -68,6 +70,7 @@ l1:
             else
             {
                 p_[i_] -= 2.0 * dp_[i_];
+                SetPidParams();
                 error_ = cte * cte;
                 next_label_ = 3;
                 return;
@@ -81,6 +84,7 @@ l1:
                 else
                 {
                     p_[i_] += dp_[i_];
+                    SetPidParams();
                     dp_[i_] *= 0.9;
                 }
             }
@@ -92,6 +96,14 @@ l1:
 double Twiddle::SumDp()
 {
     return dp_[0] + dp_[1] + dp_[2];
+}
+
+void Twiddle::SetPidParams()
+{
+    pid_->Kp = p_[0];
+    pid_->Ki = p_[1];
+    pid_->Kd = p_[2];
+    pid_->i_error = 0;
 }
 
 void Twiddle::Print()

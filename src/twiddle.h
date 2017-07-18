@@ -4,8 +4,10 @@ class PID;
 
 class Twiddle
 {
+    PID *const pid_;
     double tolerance_;
     int samples_;
+    double p_[3];
     double dp_[3];
     double error_;
     double best_error_;
@@ -14,11 +16,11 @@ class Twiddle
     int step_;
 
   public:
-    double p_[3];
-    Twiddle(double p0, double p1, double p2, double tolerance, int samples);
+    Twiddle(PID* pid, double tolerance, int samples);
     virtual ~Twiddle();
     void Step(double cte);
     double SumDp();
+    void SetPidParams();
     void Print();
 };
 

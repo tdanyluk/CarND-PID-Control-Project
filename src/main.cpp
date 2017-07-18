@@ -51,11 +51,11 @@ int main()
 
   PID pid;
   pid.Init(0.74, 0.0039, 4.5);
-  //Twiddle twiddle(pid.Kp, pid.Ki, pid.Kd, 0.1, 1200);
+  //Twiddle twiddle(&pid, 0.1, 1200);
   PID speedPid;
   speedPid.Init(0.1, 0.001, 0);
 
-  h.onMessage([&pid, &speedPid /*, &twiddle*/](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&pid, &speedPid/*, &twiddle*/](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -74,9 +74,6 @@ int main()
           //double angle = std::stod(j[1]["steering_angle"].get<std::string>());
 
           //twiddle.Step(cte);
-          //pid.Kp = twiddle.p_[0];
-          //pid.Ki = twiddle.p_[1];
-          //pid.Kd = twiddle.p_[2];
           pid.UpdateError(cte);
           const double steer_value = clamp(-pid.TotalError(), -1, 1);
           speedPid.UpdateError(speed - 25);

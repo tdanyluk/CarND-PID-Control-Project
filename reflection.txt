@@ -1,0 +1,14 @@
+Effect of the parameters
+
+First I started with Kp=0, Ki=0, Kd=0.
+I have made the Kp parameter bigger until the car turned in the direction of the right track.
+I have made the Kd parameter bigger until the wavy motion almost disappeared.
+I have seen that the car sometimes have to correct its track even on a straight track
+(it was a little bit biased towards the right), so I have made the Ki parameter bigger.
+
+Choosing the final parameters
+
+First I have tuned the parameters by hand, as described above.
+Then I have applied Twiddle with 1200 timesteps (1 loop) for each error measurement.
+Actually it did not make the result much better, the manual tuning was good itself.
+
